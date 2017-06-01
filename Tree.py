@@ -4,6 +4,36 @@ class RBT:
     def __init__(self):
         self.root = None
 
+    def search(self, tree, val):
+        if self.root is None:
+            #print("That RedBlackT Tree do not have any Node")
+            return None
+        if tree is None:
+            #print(val, "is not in the RedBlackTree")
+            return None
+        if tree.val > val:
+            return self.search(tree.left, val)
+        elif tree.val < val:
+            return self.search(tree.right, val)
+        else:
+            return tree
+    
+    def findMinimum(self, tree):
+        if tree.left is None:
+            return tree
+        else:
+            return self.findMinimum(tree.left)
+
+    def transplant(self, u, v):
+        if u.parent is None:
+            self.root = v
+        elif u == u.parent.left:
+            u.parent.left = v
+        else:
+            u.parent.right = v
+        if v is not None:
+            v.parent = u.parent
+
     def insert(self, tree, n):
         # init
         y = None
@@ -60,8 +90,111 @@ class RBT:
                     n.parent.parent.color = "RED"
                     self.Left_Rotate(tree, n.parent.parent)
         self.root.color = "BLACK"
-        self.print(self.root, 0)
-        print("")
+
+    def delete(self, tree, n):
+        delTree = self.search(tree, n)
+        if delTree is None:
+            return
+
+        y = delTree
+        yOrgColor = y.color
+
+        if delTree.left == None:
+            x = delTree.right
+            self.transplant(delTree, delTree.right)
+
+        elif delTree.right == None:
+            x = delTree.left
+            self.transplant(delTree, delTree.left)
+
+        else:
+            y = self.findMinimum(delTree.right)
+            yOrgColor = y.color
+            x = y.right
+
+            if y.parent is not delTree:
+                # y's right is delTree's right
+                self.transplant(y, y.right)
+                y.right = delTree.right
+                y.right.parent = y
+            # Transplant y to delTree
+            self.transplant(delTree, y)
+            # y's left is delTree's left
+            y.left = delTree.left
+            y.left.parent = y
+            y.color = delTree.color # y's color is delTree's original color
+
+        if yOrgColor == "BLACK":
+            self.RBT_Delete_Fixup(self, x)
+
+    def RBT_Delete_Fixup(self, tree, x):
+        while x is not None and x is not tree.root and x.color == "BLACK":
+            # x is located at the left side
+            if x == x.parent.left:
+                # w is x's sibling
+                w = x.parent.right
+
+                # Case 1
+                if w.color == "RED":
+                    w.color = "BLACK"
+                    x.parent.color = "RED"
+                    self.Left_Rotate(tree, x.parent)
+                    # Change w to x's sibling
+                    w = x.parent.right
+
+                # Case 2
+                if w.left.color == "BLACK" and w.right.color == "BLACK":
+                    w.color = "RED"
+                    x = x.parent
+
+                # Case 3
+                else:
+                    if w.right.color == "BLACK":
+                        w.left.color = "BLACK"
+                        w.color = "RED"
+                        self.Right_Rotate(tree, w)
+                        w = x.parent.right
+
+                    # Case 4
+                    w.color = x.parent.color
+                    x.parent.color = "BLACK"
+                    w.right.color = "BLACK"
+                    self.Left_Rotate(tree, x.parent)
+                    x = tree.root
+
+            else:
+                # w is x's sibling
+                w = x.parent.left
+
+                # Case 1
+                if w.color == "RED":
+                    w.color = "BLACK"
+                    x.parent.color = "RED"
+                    self.Right_Rotate(tree, x.parent)
+                    # Change w to x's sibling
+                    w = x.parent.left
+
+                # Case 2
+                if w.left.color == "BLACK" and w.right.color == "BLACK":
+                    w.color = "RED"
+                    x = x.parent
+
+                # Case 3
+                else:
+                    if w.left.color == "BLACK":
+                        w.right.color = "BLACK"
+                        w.color = "RED"
+                        self.Left_Rotate(tree, w)
+                        w = x.parent.left
+
+                    # Case 4
+                    w.color = x.parent.color
+                    x.parent.color = "BLACK"
+                    w.left.color = "BLACK"
+                    self.Right_Rotate(tree, x.parent)
+                    x = tree.root
+        if x is not None:
+            x.color = "BLACK"
 
     def Left_Rotate(self, tree, x):
         # set y
@@ -115,3 +248,41 @@ class RBT:
         print(tree.val, tree.color)
         if tree.left is not None:
             self.print(tree.left, level + 1)
+
+    def nodeCount(self, tree, n = 0):
+        if tree is None:
+            return 0
+        else:
+            return self.nodeCount(tree.left) + self.nodeCount(tree.right) + 1
+
+    def printNodeCount(self, tree):
+        print(self.nodeCount(tree))
+
+    def blackNodeCount(self, tree):
+        if tree is None:
+            return 0
+        elif tree.color == "BLACK":
+            return self.blackNodeCount(tree.left) + self.blackNodeCount(tree.right) + 1
+        else:
+            return self.blackNodeCount(tree.left) + self.blackNodeCount(tree.right)
+
+    def printBlackNodeCount(self, tree):
+        print(self.blackNodeCount(tree))
+
+    def blackHeight(self, tree, n = 0):
+        if tree is None:
+            return 0
+        elif tree.color == "BLACK":
+            return self.blackHeight(tree.left) + 1
+        else:
+            return self.blackHeight(tree.left)
+
+    def printBlackHeight(self, tree, n = 0):
+        print(self.blackHeight(tree, n))
+
+    def inOrderTraversal(self, tree):
+        if tree.left is not None:
+            self.inOrderTraversal(tree.left)
+        print(tree.val, end=" ")
+        if tree.right is not None:
+            self.inOrderTraversal(tree.right)
