@@ -1,4 +1,5 @@
 from Node import Node
+from Node import NullNode
 
 class RBT:
     def __init__(self):
@@ -6,10 +7,10 @@ class RBT:
 
     def search(self, tree, val):
         if self.root is None:
-            #print("That RedBlackT Tree do not have any Node")
+            print("That RedBlackT Tree do not have any Node")
             return None
-        if tree is None:
-            #print(val, "is not in the RedBlackTree")
+        if tree.val is None:
+            print(val, "is not in the RedBlackTree")
             return None
         if tree.val > val:
             return self.search(tree.left, val)
@@ -19,7 +20,7 @@ class RBT:
             return tree
     
     def findMinimum(self, tree):
-        if tree.left is None:
+        if tree.left.val is None:
             return tree
         else:
             return self.findMinimum(tree.left)
@@ -40,7 +41,7 @@ class RBT:
         x = self.root
 
         # search inserting place
-        while x is not None:
+        while x is not None and x.val is not None:
             y = x
             if n.val < x.val:
                 x = x.left
@@ -99,11 +100,11 @@ class RBT:
         y = delTree
         yOrgColor = y.color
 
-        if delTree.left == None:
+        if delTree.left.val == None:
             x = delTree.right
             self.transplant(delTree, delTree.right)
 
-        elif delTree.right == None:
+        elif delTree.right.val == None:
             x = delTree.left
             self.transplant(delTree, delTree.left)
 
@@ -112,7 +113,9 @@ class RBT:
             yOrgColor = y.color
             x = y.right
 
-            if y.parent is not delTree:
+            if y.parent is delTree:
+                x.parent = delTree.right
+            else:
                 # y's right is delTree's right
                 self.transplant(y, y.right)
                 y.right = delTree.right
@@ -128,7 +131,7 @@ class RBT:
             self.RBT_Delete_Fixup(self, x)
 
     def RBT_Delete_Fixup(self, tree, x):
-        while x is not None and x is not tree.root and x.color == "BLACK":
+        while x is not tree.root and x.color == "BLACK":
             # x is located at the left side
             if x == x.parent.left:
                 # w is x's sibling
@@ -241,16 +244,16 @@ class RBT:
         x.parent = y
 
     def print(self, tree, level):
-        if tree.right is not None:
+        if tree.right.val is not None:
             self.print(tree.right, level + 1)
         for i in range(level):
             print('   ', end='')
         print(tree.val, tree.color)
-        if tree.left is not None:
+        if tree.left.val is not None:
             self.print(tree.left, level + 1)
 
     def nodeCount(self, tree, n = 0):
-        if tree is None:
+        if tree.val is None:
             return 0
         else:
             return self.nodeCount(tree.left) + self.nodeCount(tree.right) + 1
@@ -259,7 +262,7 @@ class RBT:
         print(self.nodeCount(tree))
 
     def blackNodeCount(self, tree):
-        if tree is None:
+        if tree.val is None:
             return 0
         elif tree.color == "BLACK":
             return self.blackNodeCount(tree.left) + self.blackNodeCount(tree.right) + 1
@@ -270,7 +273,7 @@ class RBT:
         print(self.blackNodeCount(tree))
 
     def blackHeight(self, tree, n = 0):
-        if tree is None:
+        if tree.val is None:
             return 0
         elif tree.color == "BLACK":
             return self.blackHeight(tree.left) + 1
@@ -281,8 +284,8 @@ class RBT:
         print(self.blackHeight(tree, n))
 
     def inOrderTraversal(self, tree):
-        if tree.left is not None:
+        if tree.left.val is not None:
             self.inOrderTraversal(tree.left)
         print(tree.val, end=" ")
-        if tree.right is not None:
+        if tree.right.val is not None:
             self.inOrderTraversal(tree.right)

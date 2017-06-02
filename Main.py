@@ -26,8 +26,6 @@ def main():
         else:
             break
 
-    #rbt.print(rbt.root, 0)
-
     print("Number of Total Node")
     rbt.printNodeCount(rbt.root)
 
