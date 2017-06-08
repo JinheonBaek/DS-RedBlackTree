@@ -11,11 +11,9 @@ class RBT:
     def search(self, tree, val):
         if self.root is None:
             print("That RedBlack Tree do not have any Node")
-            self.missNode += 1
             return None
         if tree.val is None:
             print(val, "is not in the RedBlackTree")
-            self.missNode += 1
             return None
         if tree.val > val:
             return self.search(tree.left, val)
@@ -99,10 +97,12 @@ class RBT:
         self.root.color = "BLACK"
 
     def delete(self, tree, n):
-        self.deleteNode += 1
         delTree = self.search(tree, n)
         if delTree is None:
+            self.missNode += 1
             return
+        else:
+            self.deleteNode += 1
 
         y = delTree
         yOrgColor = y.color
