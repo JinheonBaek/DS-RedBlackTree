@@ -4,13 +4,18 @@ from Node import NullNode
 class RBT:
     def __init__(self):
         self.root = None
+        self.insertNode = 0
+        self.deleteNode = 0
+        self.missNode = 0
 
     def search(self, tree, val):
         if self.root is None:
-            print("That RedBlackT Tree do not have any Node")
+            print("That RedBlack Tree do not have any Node")
+            self.missNode += 1
             return None
         if tree.val is None:
             print(val, "is not in the RedBlackTree")
+            self.missNode += 1
             return None
         if tree.val > val:
             return self.search(tree.left, val)
@@ -39,6 +44,7 @@ class RBT:
         # init
         y = None
         x = self.root
+        self.insertNode += 1
 
         # search inserting place
         while x is not None and x.val is not None:
@@ -93,6 +99,7 @@ class RBT:
         self.root.color = "BLACK"
 
     def delete(self, tree, n):
+        self.deleteNode += 1
         delTree = self.search(tree, n)
         if delTree is None:
             return
@@ -252,6 +259,15 @@ class RBT:
         if tree.left.val is not None:
             self.print(tree.left, level + 1)
 
+    def printInsertNode(self, tree):
+        print(self.insertNode)
+
+    def printDeleteNode(self, tree):
+        print(self.deleteNode)
+
+    def printMissNode(self, tree):
+        print(self.missNode)
+
     def nodeCount(self, tree, n = 0):
         if tree.val is None:
             return 0
@@ -286,6 +302,6 @@ class RBT:
     def inOrderTraversal(self, tree):
         if tree.left.val is not None:
             self.inOrderTraversal(tree.left)
-        print(tree.val, end=" ")
+        print(tree.val, tree.color)
         if tree.right.val is not None:
             self.inOrderTraversal(tree.right)

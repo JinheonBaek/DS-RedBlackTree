@@ -1,41 +1,73 @@
+import os
 from Node import Node
 from Tree import RBT
 
-def getFileData(name = "input.txt"):
+def search():
+    filenames = os.listdir('./input/')
+    filename_lst = []
+
+    for filename in filenames:
+        filename_lst.append(filename)
+
+    return filename_lst
+
+def getFileData(names):
     data = []
+    _dir = './input/'
 
-    f = open(name, 'r')
-    lines = f.readlines()
+    for name in names:
+        f = open(_dir + name, 'r')
+        lines = f.readlines()
+        tmp_data = []
 
-    for line in lines:
-        data.append(int(line.strip("\n")))
+        for line in lines:
+            tmp_data.append(int(line.strip("\n")))
 
-    f.close()
+        data.append(tmp_data)
+        f.close()
 
     return data
 
 def main():
-    data = getFileData()
-    rbt = RBT()
+    #init
+    names = search()
+    datas = getFileData(names)
+    sequence = 0
 
-    for i in data:
-        if i > 0:
-            rbt.insert(rbt.root, Node(i))
-        elif i < 0:
-            rbt.delete(rbt.root, -i)
-        else:
-            break
+    for data in datas:
+        rbt = RBT()
 
-    print("Number of Total Node")
-    rbt.printNodeCount(rbt.root)
+        for i in data:
+            if i > 0:
+                rbt.insert(rbt.root, Node(i))
+            elif i < 0:
+                rbt.delete(rbt.root, -i)
+            else:
+                break
 
-    print("Number of Black Node")
-    rbt.printBlackNodeCount(rbt.root)
+        print("\nFile Name: " + names[sequence])
 
-    print("Black Height")
-    rbt.printBlackHeight(rbt.root)
+        print("Number of Total Node")
+        rbt.printNodeCount(rbt.root)
 
-    print("Inorder Traversal")
-    rbt.inOrderTraversal(rbt.root)
+        print("Number of Insert Node")
+        rbt.printInsertNode(rbt.root)
+
+        print("Number of Delete Node")
+        rbt.printDeleteNode(rbt.root)
+
+        print("Number of Miss Node")
+        rbt.printMissNode(rbt.root)
+
+        print("Number of Black Node")
+        rbt.printBlackNodeCount(rbt.root)
+
+        print("Black Height")
+        rbt.printBlackHeight(rbt.root)
+
+        print("Inorder Traversal")
+        rbt.inOrderTraversal(rbt.root)
+
+        sequence += 1
 
 main()
