@@ -10,10 +10,10 @@ class RBT:
 
     def search(self, tree, val):
         if self.root is None:
-            print("That RedBlack Tree do not have any Node")
+            #print("That RedBlack Tree do not have any Node")
             return None
         if tree.val is None:
-            print(val, "is not in the RedBlackTree")
+            #print(val, "is not in the RedBlackTree")
             return None
         if tree.val > val:
             return self.search(tree.left, val)
@@ -260,13 +260,13 @@ class RBT:
             self.print(tree.left, level + 1)
 
     def printInsertNode(self, tree):
-        print(self.insertNode)
+        print("insert =", self.insertNode)
 
     def printDeleteNode(self, tree):
-        print(self.deleteNode)
+        print("deleted =", self.deleteNode)
 
     def printMissNode(self, tree):
-        print(self.missNode)
+        print("miss =", self.missNode)
 
     def nodeCount(self, tree, n = 0):
         if tree.val is None:
@@ -275,7 +275,7 @@ class RBT:
             return self.nodeCount(tree.left) + self.nodeCount(tree.right) + 1
 
     def printNodeCount(self, tree):
-        print(self.nodeCount(tree))
+        print("total =", self.nodeCount(tree))
 
     def blackNodeCount(self, tree):
         if tree.val is None:
@@ -286,7 +286,7 @@ class RBT:
             return self.blackNodeCount(tree.left) + self.blackNodeCount(tree.right)
 
     def printBlackNodeCount(self, tree):
-        print(self.blackNodeCount(tree))
+        print("nb =", self.blackNodeCount(tree))
 
     def blackHeight(self, tree, n = 0):
         if tree.val is None:
@@ -297,11 +297,11 @@ class RBT:
             return self.blackHeight(tree.left)
 
     def printBlackHeight(self, tree, n = 0):
-        print(self.blackHeight(tree, n))
+        print("bh =", self.blackHeight(tree, n))
 
     def inOrderTraversal(self, tree):
         if tree.left.val is not None:
             self.inOrderTraversal(tree.left)
-        print(tree.val, tree.color)
+        print(tree.val, "R" if tree.color == "RED" else "B")
         if tree.right.val is not None:
             self.inOrderTraversal(tree.right)
